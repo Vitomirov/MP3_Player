@@ -25,10 +25,40 @@ def addMusic():
 
 # Function to play music
 def playMusic():
+    global currentIndex
     musicName = Playlist.get(ACTIVE)
     print(musicName[0:-4])
-    mixer.music.load(Playlist.get(ACTIVE))
+    currentIndex = Playlist.curselection()[0]
+    mixer.music.load(Playlist.get(currentIndex))
     mixer.music.play()
+
+# Function to play previous song
+currentIndex = 0;
+def previuosSong():
+    global currentIndex
+    if currentIndex > 0:
+        currentIndex -= 1
+        Playlist.selection_clear(0, END)
+        Playlist.activate(currentIndex)
+        Playlist.selection_set(currentIndex)
+        mixer.music.load(Playlist.get(currentIndex))
+        mixer.music.play()
+    else:
+        print("This is the first song in the playlist")
+
+# Function to play next song
+def nextSong():
+    global currentIndex
+    if currentIndex < Playlist.size() - 1:
+        currentIndex += 1
+        Playlist.selection_clear(0, END)
+        Playlist.activate(currentIndex)
+        Playlist.selection_set(currentIndex)
+        mixer.music.load(Playlist.get(currentIndex))
+        mixer.music.play()
+    else:
+        print("This is the last song in the playlist")
+
 
 # Function to increase volume
 def increaseVolume():
@@ -81,26 +111,34 @@ root.after(0, update, 0)
 # Creating buttons for music player controls
 ButtonPlay = PhotoImage(file="play.png")
 Button(root, image=ButtonPlay, bg="#FFFFFF", bd=0, height=60, width=60,
-       command=playMusic).place(x=258, y=487)
+       command=playMusic).place(x=254, y=487)
 
 ButtonStop = PhotoImage(file="stop.png")
 Button(root, image=ButtonStop, bg="#FFFFFF", bd=0, height=60, width=60,
-       command=mixer.music.stop).place(x=195.2, y=487)
+       command=mixer.music.stop).place(x=132.2, y=487)
+
+ButtonPreviousSong = PhotoImage(file="previousSong.png")
+Button(root, image=ButtonPreviousSong, bg="#FFFFFF", bd=0, height=60, width=60,
+       command=lambda: previuosSong()).place(x=192, y =487)
 
 currentVolume = 0.5
 
 ButtonVolumeUp = PhotoImage(file="volumeUp.png")
 Button(root, image=ButtonVolumeUp, bg="#FFFFFF", bd=0, height=60, width=60,
-       command=lambda: increaseVolume()).place(x=132, y=487)
+       command=lambda: increaseVolume()).place(x=72, y=487)
 
 ButtonVolumeDown = PhotoImage(file="volumeDown.png")
 Button(root, image=ButtonVolumeDown, bg="#FFFFFF", bd=0, height=60, width=60,
-       command=lambda: decreaseVolume()).place(x=72, y=487)
+       command=lambda: decreaseVolume()).place(x=12, y=487)
 
 paused = False
 ButtonPause = PhotoImage(file="pause.png")
 Button(root, image=ButtonPause, bg="#FFFFFF", bd=0, height=60, width=60,
-       command=pause).place(x=320, y=487)
+       command=pause).place(x=318, y=487)
+
+ButtonNextSong = PhotoImage(file="nextSongpng.png")
+Button(root, image=ButtonNextSong, bg="#FFFFFF", bd=0, height=60, width=60,
+       command=lambda: nextSong()).place(x=372, y=487)
 
 # Creating a menu button
 Menu = PhotoImage(file="menu.png")
